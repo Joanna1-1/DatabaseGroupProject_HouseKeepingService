@@ -1,0 +1,26 @@
+CREATE TABLE service_types(
+service_type_number NUMBER(4,0),
+charge_per_unit_area NUMBER(5,2),
+service_type_description VARCHAR(30),
+CONSTRAINT service_type_number_pk PRIMARY KEY(service_type_number));
+
+CREATE TABLE services(
+service_number NUMBER(4,0),
+service_type_number NUMBER(4,0),
+client_ID NUMBER(4,0),
+housekeeper_ID NUMBER(4,0),
+service_date DATE,
+service_hour NUMBER(5),
+unit_area VARCHAR2(12),
+Pet VARCHAR2(1),
+status_code VARCHAR2(1),
+service_payment_number NUMBER(4,0),
+CONSTRAINT service_number_pk PRIMARY KEY(service_number),
+CONSTRAINT service_type_number_fk FOREIGN KEY(service_type_number),
+CONSTRAINT client_id_fk FOREIGN KEY(client_id),
+CONSTRAINT pet_ck CHECK(pet IN('Y','N')),
+CONSTRAINT status_code_ck CHECK(status_code IN('F','U','C'))
+CONSTRAINT service_payment_number_fk FOREIGN KEY(service_payment_number));
+
+DROP TABLE service_types;
+DROP TABLE services;

@@ -1,0 +1,103 @@
+DROP TABLE clients CASCADE CONSTRAINTS;
+DROP TABLE housekeepers CASCADE CONSTRAINTS;
+DROP TABLE service_types CASCADE CONSTRAINTS;
+DROP TABLE salary_payments CASCADE CONSTRAINTS;
+DROP TABLE service_payments CASCADE CONSTRAINTS;
+DROP TABLE services CASCADE CONSTRAINTS;
+DROP TABLE status CASCADE CONSTRAINTS;
+
+--clients table
+CREATE TABLE clients(
+client_ID NUMBER(4,0) PRIMARY KEY,
+first_name VARCHAR2(30) NOT NULL,
+last_name VARCHAR2(30) NOT NULL,
+street VARCHAR2(30) NOT NULL,
+city VARCHAR2(30) NOT NULL,
+state VARCHAR2(2) NOT NULL,
+zip VARCHAR2(6) NOT NULL,
+phone VARCHAR2(12) NOT NULL,
+email VARCHAR2(30) NOT NULL
+);
+
+--housekeepers table
+CREATE TABLE housekeepers(
+housekeeper_ID NUMBER(4,0) PRIMARY KEY,
+first_name VARCHAR2(30) NOT NULL,
+last_name VARCHAR2(30) NOT NULL,
+street VARCHAR2(30),
+city VARCHAR2(30) NOT NULL,
+state VARCHAR2(2) NOT NULL,
+zip VARCHAR2(6) NOT NULL,
+phone VARCHAR2(12) NOT NULL,
+email VARCHAR2(30),
+date_of_entry DATE NOT NULL,
+hourly_wage NUMBER(5,2) NOT NULL
+);
+
+--service_types table
+CREATE TABLE service_types(
+service_type_number NUMBER(4,0) NOT NULL,
+charge_per_unit_area NUMBER(5,2) NOT NULL,
+service_type_description VARCHAR2(30) NOT NULL, 
+CONSTRAINT service_type_number_pk PRIMARY KEY(service_type_number));
+
+--service_payments table
+CREATE TABLE service_payments(
+service_payment_number NUMBER(4,0) PRIMARY KEY,
+total_price NUMBER(5,2) NOT NULL,
+payment_option VARCHAR2(10),
+Payment_status VARCHAR2(1) NOT NULL,
+remainder NUMBER(5,2) NOT NULL,
+CONSTRAINT payment_status_ck CHECK(payment_status IN('Y','N')));
+
+--Services table
+CREATE TABLE services(
+service_number NUMBER(4,0) NOT NULL,
+service_type_number NUMBER(4,0) NOT NULL,
+client_ID NUMBER(4,0) NOT NULL,
+housekeeper_ID NUMBER(4,0) NOT NULL,
+service_date DATE NOT NULL,
+service_hour NUMBER(5) NOT NULL,
+unit_area VARCHAR2(12) NOT NULL,
+pet VARCHAR2(1) NOT NULL,
+status_code VARCHAR2(1) NOT NULL,
+service_payment_number NUMBER(4,0) NOT NULL,
+CONSTRAINT service_number_pk PRIMARY KEY(service_number),
+CONSTRAINT service_type_number_fk FOREIGN KEY(service_type_number)
+REFERENCES service_types (service_type_number),
+CONSTRAINT client_id_fk FOREIGN KEY(client_ID)
+REFERENCES clients (client_ID),
+CONSTRAINT housekeeper_ID_fk FOREIGN KEY(housekeeper_ID)
+REFERENCES housekeepers (housekeeper_ID),
+CONSTRAINT pet_ck CHECK(pet IN('Y','N')),
+CONSTRAINT status_code_ck CHECK(status_code IN('F','U','C')),
+CONSTRAINT service_payment_number_fk FOREIGN KEY(service_payment_number)
+REFERENCES service_payments (service_payment_number));
+
+--Salary_Payments table
+CREATE TABLE salary_payments(
+salary_payment_number NUMBER(4,0) PRIMARY KEY,
+housekeeper_id NUMBER(4,0) NOT NULL,
+payment_date Date NOT NULL,
+total_salary NUMBER(5,2) NOT NULL,
+CONSTRAINT housekeepers_id_fk FOREIGN KEY(housekeeper_id)
+ REFERENCES housekeepers(housekeeper_id));
+
+--Status (Lookup table)
+CREATE TABLE status(
+status_code VARCHAR2(1) PRIMARY KEY,
+status_description CHAR(10));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
